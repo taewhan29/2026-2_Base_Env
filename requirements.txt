@@ -1,0 +1,11 @@
+# 1. 수치 연산 및 시각화 기본
+numpy
+pandas
+matplotlib
+
+# 2. 유틸리티 & 코드 품질
+tqdm
+black
+
+# 3. 주피터 노트북 연동
+ipykernel
