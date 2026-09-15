@@ -9,3 +9,6 @@ black
 
 # 3. 주피터 노트북 연동
 ipykernel
+
+# 4. opencv
+opencv-python-headless
