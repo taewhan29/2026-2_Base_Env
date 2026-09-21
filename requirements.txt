@@ -12,3 +12,7 @@ ipykernel
 
 # 4. opencv
 opencv-python-headless
+
+# 5. skit-learn
+scikit-learn
+networkx

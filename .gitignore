@@ -1,3 +1,5 @@
 # Ignored directories
 computer_vision/cv_2026_docker/images/
 /voice_engineering_local
+/machine_learning/datasets
+/machine_learning/mnist_sample
