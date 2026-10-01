@@ -3,3 +3,7 @@ computer_vision/cv_2026_docker/images/
 /voice_engineering_local
 /machine_learning/datasets
 /machine_learning/mnist_sample
+
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+computer_vision/chap04_student/images/
