@@ -9,10 +9,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-# import cv2
+import cv2
 
 # 한글 형태소 분석
-# from konlpy.tag import Okt, Kkma
+from konlpy.tag import Okt, Kkma
 
 # 머신러닝 - 데이터 분할 및 전처리
 from sklearn.model_selection import train_test_split

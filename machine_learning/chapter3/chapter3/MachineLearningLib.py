@@ -9,10 +9,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-# import cv2
+import cv2
 
 # 한글 형태소 분석
-# from konlpy.tag import Okt, Kkma
+from konlpy.tag import Okt, Kkma
 
 # 머신러닝 - 데이터 분할 및 전처리
 from sklearn.model_selection import train_test_split
@@ -97,3 +97,44 @@ def man_dist(x,y):
 
 
     return dist_val;
+
+def euc_distance(x,y):
+    dist_val = 0
+    dim = x.shape[0]
+    for i in range(dim):
+        dist_val = dist_val = np.abs(x[i]-y[i])**2
+
+    dist_val = np.sqrt(dist_val)# square root
+    # print(dist_val)
+    
+    return dist_val;
+
+def sup_dist(x,y):
+   
+    return np.abs(x-y).max();
+
+def ham_dist(x,y):
+    dim = x.shape[0]
+    dist_val = 0
+    for i in range(dim):
+        if x[i] != y[i]:
+            dist_val += 1
+
+    # print(dist_val)
+    return dist_val;
+
+
+def corr(x,y):
+    dim = x.shape[0]
+    numerator = 0
+    denominator_x = 0
+    denominator_y = 0
+    for i in range(dim):
+        numerator += (x-x_bar) * (y-y_bar)
+        denominator_x += (x[i]-x_bar)**2
+        denominator_y += (y[i]-y_bar)**2
+
+    denominator = np.sqrt(denominator_x + denominator_y)
+
+    # print(numerator,denominator_x,denominator_y)
+    return corr_val;
