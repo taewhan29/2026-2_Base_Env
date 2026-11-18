@@ -98,16 +98,14 @@ def man_dist(x,y):
 
     return dist_val;
 
-def euc_distance(x,y):
+def euc_distance(x, y):
     dist_val = 0
     dim = x.shape[0]
     for i in range(dim):
-        dist_val = dist_val = np.abs(x[i]-y[i])**2
+        dist_val += (x[i] - y[i])**2
 
-    dist_val = np.sqrt(dist_val)# square root
-    # print(dist_val)
-    
-    return dist_val;
+    dist_val = np.sqrt(dist_val)
+    return dist_val
 
 def sup_dist(x,y):
    
