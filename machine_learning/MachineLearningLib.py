@@ -130,59 +130,116 @@ def corr(x,y):
 
     return corr_val;
 
-def partitional_clustering(X,k): # X는 데이터셋, k는 클러스터 갯수
-    MAX_ITER = 100 # 최대 반복횟수
-    num, dim = X.shape
-    # k개의 랜덤 초기값 M
-    M = X[np.random.randint(0,num,[k]),:]
+# =========================================
+# SSE
+# =========================================
+def Calc_SSE(clusters, X):
 
-    # k-means clustering 수행
-    for iters in range(MAX_ITER): # 최대 반복 횟수
-        assign_mat = np.zeros(num)
-        for i in range(0,num):
-            dist = np.zeros(k)
-            for j in range(k):
-                dist[j] = euc_distance(X[i,:],M[j,:])
-            assign_mat[i] = np.argmin(dist)
-            
-        new_M = np.zeros((k,dim))
-        for j in range(k):
-            new_M[j,:] = X[assign_mat == j,:].mean(axis=0)
-            
-        # print(iters, M, new_M)
-        if (euc_distance(M.flatten(),new_M.flatten()) == 0):
-            break
-        else:
-            M = new_M  
-
-    assign_mat = np.zeros(num)
-    for i in range(0,num):
-        dist = np.zeros(k)
-        for j in range(k):
-            dist[j] = euc_distance(X[i,:],M[j,:])
-        assign_mat[i] = np.argmin(dist)
-    return assign_mat
-
-
-def Calc_purity(clusters,Y):
-    purity = 0
-    for g in np.unique(clusters):
-        group = Y[clusters==g]
-        val, cnt = np.unique(group, return_counts=True)
-        if len(val) != 0:            
-            purity += np.max(cnt)/np.sum(cnt)
-    
-    return purity
-
-def Calc_SSE(clusters,X):
     sse = 0
-    for c in np.unique(clusters):
-        # 그룹 나누기
-        group = X[clusters == c,:]
-        if group.shape[0] > 0:
-            # 평균 구하기
-            m = np.mean(group, axis = 0)
-            # 거리(에러) 구하기
-            for i in range(len(group)):
-                sse += euc_distance(group[i,:], m)
+
+    for j in np.unique(clusters):
+
+        points = X[clusters == j]
+
+        if len(points) == 0:
+            continue
+
+        center = points.mean(axis=0)
+
+        sse += np.sum((points - center) ** 2)
+
     return sse
+
+
+# =========================================
+# Purity
+# =========================================
+def Calc_purity(clusters, Y):
+
+    purity_sum = 0
+
+    for i in np.unique(clusters):
+
+        arr = Y[clusters == i]
+
+        values, counts = np.unique(
+            arr,
+            return_counts=True
+        )
+
+        if len(counts) > 0:
+            purity_sum += np.max(counts)
+
+    result = purity_sum / len(Y)
+
+    return result
+
+
+# =========================================
+# K-means
+# =========================================
+def partitional_clustering(X, k):
+
+    num, dim = X.shape
+
+    max_iter = 100
+
+    # 서로 다른 k개의 초기 centroid 선택
+    idx = np.random.choice(
+        num,
+        k,
+        replace=False
+    )
+
+    old_m = X[idx, :].copy()
+
+    for iters in range(max_iter):
+
+        # ---------------------------------
+        # 가장 가까운 centroid에 할당
+        # ---------------------------------
+        assign_mat = np.zeros(
+            num,
+            dtype=int
+        )
+
+        for i in range(num):
+
+            distances = np.linalg.norm(
+                X[i, :] - old_m,
+                axis=1
+            )
+
+            assign_mat[i] = np.argmin(
+                distances
+            )
+
+        # ---------------------------------
+        # 새로운 centroid 계산
+        # ---------------------------------
+        new_m = np.zeros([k, dim])
+
+        for j in range(k):
+
+            points = X[assign_mat == j, :]
+
+            if len(points) > 0:
+
+                new_m[j, :] = points.mean(
+                    axis=0
+                )
+
+            else:
+
+                # 빈 cluster이면 기존 centroid 유지
+                new_m[j, :] = old_m[j, :]
+
+        # ---------------------------------
+        # 수렴 확인
+        # ---------------------------------
+        if np.linalg.norm(old_m.reshape(1, k*dim)-new_m.reshape(1, k*dim)) < 1e-6:
+            break
+
+        old_m = new_m
+
+    return assign_mat
